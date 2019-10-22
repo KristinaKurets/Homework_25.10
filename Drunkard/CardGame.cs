@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using static Drunkard.Card;
 
 namespace Drunkard
@@ -48,29 +50,45 @@ namespace Drunkard
 
         public void Game()
         {
-            
-            while (Player1.Count != 0 || Player2.Count != 0)
+
+            while (Player1.Count != 0 && Player2.Count != 0)
             {
                 Console.WriteLine($"Player1's card: {Player1[0]}. Player2's card: {Player2[0]}");
+                Thread.Sleep(100);
                 if ((int)Player1[0].Value > (int)Player2[0].Value)
                 {
-
-                    Player1.Add(Player2[0]);
-                    Player2.RemoveAt(0);
-                    Console.WriteLine($"Player1 won.");
-                    Player1.Add(Player1[0]);
-                    Player1.RemoveAt(0);
-
+                    if (Player1[0].Value == CardValue.Ace && Player2[0].Value == CardValue.six)
+                    {
+                        Player2.Add(Player1[0]);
+                        Player1.RemoveAt(0);
+                        Player2.Add(Player2[0]);
+                        Player2.RemoveAt(0);
+                    }
+                    else
+                    {
+                        Player1.Add(Player2[0]);
+                        Player2.RemoveAt(0);
+                        Player1.Add(Player1[0]);
+                        Player1.RemoveAt(0);
+                    }
                 }
 
                 else if ((int)Player1[0].Value < (int)Player2[0].Value)
                 {
-                    Player2.Add(Player1[0]);
-                    Player1.RemoveAt(0);
-                    //Console.WriteLine($"Player2 won.");
-                    Player2.Add(Player2[0]);
-                    Player2.RemoveAt(0);
-
+                    if (Player2[0].Value == CardValue.Ace && Player1[0].Value == CardValue.six)
+                    {
+                        Player1.Add(Player1[0]);
+                        Player2.RemoveAt(0);
+                        Player1.Add(Player1[0]);
+                        Player1.RemoveAt(0);
+                    }
+                    else
+                    {
+                        Player2.Add(Player1[0]);
+                        Player1.RemoveAt(0);
+                        Player2.Add(Player2[0]);
+                        Player2.RemoveAt(0);
+                    }
                 }
 
                 else
@@ -78,14 +96,20 @@ namespace Drunkard
                     Player2.Add(Player2[0]);
                     Player2.RemoveAt(0);
                     Player1.Add(Player1[0]);
-                    Player2.RemoveAt(0);
+                    Player1.RemoveAt(0);
                 }
 
-
+                if (Player1.Count == 0)
+                {
+                    Console.WriteLine("Player 2 won!");
+                }
+                else if (Player2.Count == 0)
+                {
+                    Console.WriteLine("Player 1 won!");
+                }
             }
-            
+
         }
-        
 
         public void Start()
         {
@@ -93,7 +117,7 @@ namespace Drunkard
             ShuffleDeck();
             DeckDivision();
             Game();
-            ShowDeck();
+            //ShowDeck();
         }
     }
 
