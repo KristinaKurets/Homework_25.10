@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using static Drunkard.Card;
 
 namespace Drunkard
@@ -50,26 +48,27 @@ namespace Drunkard
 
         public void Game()
         {
-
+            Console.WriteLine("Let's play the Drunkard! The rules are very simple:each of the players throws the top card of his deck onto the table." +
+                "A player whose card is older takes all the cards from the table and puts them under the bottom of his deck.Ace is older than all cards except six.");
+            Console.WriteLine("Press any key to start the game.");
+            Console.ReadLine();
+            int count = 0;
             while (Player1.Count != 0 && Player2.Count != 0)
             {
-                Console.WriteLine($"Player1's card: {Player1[0]}. Player2's card: {Player2[0]}");
-                Thread.Sleep(100);
+                Console.WriteLine($"Your card is: {Player1[0]}. My card is: {Player2[0]}");
+                Thread.Sleep(200);
                 if ((int)Player1[0].Value > (int)Player2[0].Value)
                 {
+
                     if (Player1[0].Value == CardValue.Ace && Player2[0].Value == CardValue.six)
                     {
-                        Player2.Add(Player1[0]);
-                        Player1.RemoveAt(0);
-                        Player2.Add(Player2[0]);
-                        Player2.RemoveAt(0);
+                        TakeCards(Player1, Player2);
+                        Console.WriteLine($"I take your card. There are {Player1.Count} cards in your deck, and {Player2.Count} in mine.");
                     }
                     else
                     {
-                        Player1.Add(Player2[0]);
-                        Player2.RemoveAt(0);
-                        Player1.Add(Player1[0]);
-                        Player1.RemoveAt(0);
+                        TakeCards(Player2, Player1);
+                        Console.WriteLine($"You take my card. There are {Player1.Count} cards in your deck, and {Player2.Count} in mine.");
                     }
                 }
 
@@ -77,38 +76,48 @@ namespace Drunkard
                 {
                     if (Player2[0].Value == CardValue.Ace && Player1[0].Value == CardValue.six)
                     {
-                        Player1.Add(Player1[0]);
-                        Player2.RemoveAt(0);
-                        Player1.Add(Player1[0]);
-                        Player1.RemoveAt(0);
+                        TakeCards(Player1, Player2);
+                        Console.WriteLine($"You take my card. There are {Player1.Count} cards in your deck, and {Player2.Count} in mine.");
                     }
                     else
                     {
-                        Player2.Add(Player1[0]);
-                        Player1.RemoveAt(0);
-                        Player2.Add(Player2[0]);
-                        Player2.RemoveAt(0);
+                        TakeCards(Player1, Player2);
+                        Console.WriteLine($"I take your card. There are {Player1.Count} cards in your deck, and {Player2.Count} in mine.");
                     }
                 }
 
                 else
                 {
-                    Player2.Add(Player2[0]);
-                    Player2.RemoveAt(0);
-                    Player1.Add(Player1[0]);
-                    Player1.RemoveAt(0);
+                    EqualCards(Player1, Player2);
+                    Console.WriteLine("We have equal cards.");
                 }
 
-                if (Player1.Count == 0)
+                if (Player1.Count == 0) Console.WriteLine("You won!");
+                else if (Player2.Count == 0) Console.WriteLine("I won!");
+                
+                count++;
+                if (count > 500)
                 {
-                    Console.WriteLine("Player 2 won!");
-                }
-                else if (Player2.Count == 0)
-                {
-                    Console.WriteLine("Player 1 won!");
+                    Console.WriteLine("It's too boring. Let's drink better");
+                    break;
                 }
             }
+        }
 
+        public void TakeCards(List<Card> FromPlayer, List <Card>ToPlayer)
+        {
+            ToPlayer.Add(FromPlayer[0]);
+            FromPlayer.RemoveAt(0);
+            ToPlayer.Add(ToPlayer[0]);
+            ToPlayer.RemoveAt(0);
+        }
+
+        public void EqualCards(List<Card> player2, List<Card> player1)
+        {
+            player2.Add(player2[0]);
+            player2.RemoveAt(0);
+            player1.Add(player1[0]);
+            player1.RemoveAt(0);
         }
 
         public void Start()
