@@ -11,6 +11,7 @@ namespace Drunkard
         public List<Card> Deck { get; set; }
         public List<Card> Player1 { get; set; }
         public List<Card> Player2 { get; set; }
+        public List<Card> TempCards { get; set; }
 
         public void CreatingDeck()
         {
@@ -48,6 +49,7 @@ namespace Drunkard
 
         public void Game()
         {
+            TempCards = new List<Card>();
             Console.WriteLine("Let's play the Drunkard! The rules are very simple:each of the players throws the top card of his deck onto the table." +
                 "A player whose card is older takes all the cards from the table and puts them under the bottom of his deck.Ace is older than all cards except six.");
             Console.WriteLine("Press any key to start the game.");
@@ -63,11 +65,15 @@ namespace Drunkard
                     if (Player1[0].Value == CardValue.Ace && Player2[0].Value == CardValue.six)
                     {
                         TakeCards(Player1, Player2);
+                        Player2.AddRange(TempCards.GetRange(0, TempCards.Count));
+                        TempCards.Clear();
                         Console.WriteLine($"I take your card. There are {Player1.Count} cards in your deck, and {Player2.Count} in mine.");
                     }
                     else
                     {
                         TakeCards(Player2, Player1);
+                        Player1.AddRange(TempCards.GetRange(0, TempCards.Count));
+                        TempCards.Clear();
                         Console.WriteLine($"You take my card. There are {Player1.Count} cards in your deck, and {Player2.Count} in mine.");
                     }
                 }
@@ -76,12 +82,16 @@ namespace Drunkard
                 {
                     if (Player2[0].Value == CardValue.Ace && Player1[0].Value == CardValue.six)
                     {
-                        TakeCards(Player1, Player2);
+                        TakeCards(Player2, Player1);
+                        Player1.AddRange(TempCards.GetRange(0, TempCards.Count));
+                        TempCards.Clear();
                         Console.WriteLine($"You take my card. There are {Player1.Count} cards in your deck, and {Player2.Count} in mine.");
                     }
                     else
                     {
                         TakeCards(Player1, Player2);
+                        Player2.AddRange(TempCards.GetRange(0, TempCards.Count));
+                        TempCards.Clear();
                         Console.WriteLine($"I take your card. There are {Player1.Count} cards in your deck, and {Player2.Count} in mine.");
                     }
                 }
@@ -89,7 +99,7 @@ namespace Drunkard
                 else
                 {
                     EqualCards(Player1, Player2);
-                    Console.WriteLine("We have equal cards.");
+                    Console.WriteLine("We have equal cards.These cards will be taken by the player who wins the next turn.");
                 }
 
                 if (Player1.Count == 0) Console.WriteLine("You won!");
@@ -114,9 +124,9 @@ namespace Drunkard
 
         public void EqualCards(List<Card> player2, List<Card> player1)
         {
-            player2.Add(player2[0]);
+            TempCards.Add(player2[0]);
             player2.RemoveAt(0);
-            player1.Add(player1[0]);
+            TempCards.Add(player1[0]);
             player1.RemoveAt(0);
         }
 
