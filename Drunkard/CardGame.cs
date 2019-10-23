@@ -51,11 +51,11 @@ namespace Drunkard
             Console.WriteLine("Let's play the Drunkard! The rules are very simple:each of the players throws the top card of his deck onto the table." +
                 "A player whose card is older takes all the cards from the table and puts them under the bottom of his deck.Ace is older than all cards except six.");
             Console.WriteLine("Press any key to start the game.");
-            Console.ReadLine();
+            Console.ReadKey();
             int count = 0;
             while (Player1.Count != 0 && Player2.Count != 0)
             {
-                Console.WriteLine($"Your card is: {Player1[0]}. My card is: {Player2[0]}");
+                Console.WriteLine($"\nYour card is: {Player1[0]}. My card is: {Player2[0]}");
                 Thread.Sleep(200);
                 if ((int)Player1[0].Value > (int)Player2[0].Value)
                 {
