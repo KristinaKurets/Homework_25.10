@@ -42,6 +42,13 @@ namespace DndMonsters
             //First monster with 2<level<4
             var monster1 = monsters.FirstOrDefault(x => x.Level > 2 && x.Level < 4);
             Console.WriteLine($"\n\nThe first monster with level more then 2 and less then 4 is {monster1.Name}");
+            
+            //Monster's damage:
+            Console.WriteLine($"\nAll monster's damage: ");
+            foreach (var monster in monsters.Select(x => new { name = x.Name, dice = x.Weapon.Damage.Dices, side = x.Weapon.Damage.Sides, damagemode = x.DamageMode}))
+            {
+                Console.WriteLine($"{monster.name} {monster.dice}d{monster.side}+{monster.damagemode} ");
+            }
         }
     }
 }
