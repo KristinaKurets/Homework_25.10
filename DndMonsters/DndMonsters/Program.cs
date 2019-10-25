@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,6 +10,8 @@ namespace DndMonsters
         static void Main(string[] args)
         {
             List<Monster> monsters = new List<Monster>();
+            var weapon = new Weapon();
+            weapon.Damage = new DamageDice();
             using (StreamReader sr = File.OpenText("monsters.txt"))
             {
                 while (!sr.EndOfStream)
@@ -29,7 +31,7 @@ namespace DndMonsters
             
             //Max armor class:
             var MaxArmor = monsters.OrderBy(x => x.ArmorClass).Max(x => (x.ArmorClass, x.Name));
-            Console.WriteLine($"\n\nMonster with the max armor class is {MaxArmor}");
+            Console.WriteLine($"\n\nMonster with the max armor class is {MaxArmor.Name} - {MaxArmor.ArmorClass}");
 
             //Monsters with claws:
             var Claws = monsters.Where(x => x.Weapon.Name == "Claws");
@@ -41,14 +43,18 @@ namespace DndMonsters
 
             //First monster with 2<level<4
             var monster1 = monsters.FirstOrDefault(x => x.Level > 2 && x.Level < 4);
-            Console.WriteLine($"\n\nThe first monster with level more then 2 and less then 4 is {monster1.Name}");
-            
+            Console.WriteLine($"\n\nThe first monster with 3 level is {monster1.Name}");
+
             //Monster's damage:
             Console.WriteLine($"\nAll monster's damage: ");
             foreach (var monster in monsters.Select(x => new { name = x.Name, dice = x.Weapon.Damage.Dices, side = x.Weapon.Damage.Sides, damagemode = x.DamageMode}))
             {
                 Console.WriteLine($"{monster.name} {monster.dice}d{monster.side}+{monster.damagemode} ");
             }
+
+            //Max damage:
+            var MaxDamage = monsters.OrderBy(x => x.DamageMode).Max(x => (x.Weapon.Damage.Dices * x.Weapon.Damage.Sides + x.DamageMode, x.Name) );
+            Console.WriteLine($"\nMax damage has {MaxDamage.Name} - {MaxDamage.Item1}");
         }
     }
 }
