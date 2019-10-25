@@ -55,6 +55,24 @@ namespace DndMonsters
             //Max damage:
             var MaxDamage = monsters.OrderBy(x => x.DamageMode).Max(x => (x.Weapon.Damage.Dices * x.Weapon.Damage.Sides + x.DamageMode, x.Name) );
             Console.WriteLine($"\nMax damage has {MaxDamage.Name} - {MaxDamage.Item1}");
+
+            //Average damage:
+            foreach (var monster in monsters.Select(x => new { avDamage = (x.Weapon.Damage.Dices * x.Weapon.Damage.Sides + x.DamageMode) / 2, name = x.Name } ))
+            {
+                Console.WriteLine($"Average damage of {monster.name} is {monster.avDamage}");
+            }
+
+            //Sorting
+            var sorted = monsters.OrderBy(x => x.Level);
+            sorted = monsters.OrderBy(x=>x.Level).ThenBy(x => x.HitPoints);
+            foreach (var monster in sorted)
+            {
+                Console.WriteLine($"{ monster.Name}, {monster.Level} level, has {monster.HitPoints} hitpoints");
+            }
+
+            //Summ of hitpoints
+            var hitpoints = monsters.Where(x => x.Level == 1).Sum(x=> x.HitPoints);
+            Console.WriteLine($"\nThe sum of the hit points of all the first level's monsters is {hitpoints}");
         }
     }
 }
